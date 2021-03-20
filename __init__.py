@@ -36,10 +36,10 @@ class DimensionsPerKeyframeOperator(bpy.types.Operator):
 
 
 def find_dimensions():
-    # Get markers
+    # Get markers of current frame
     marker_items = bpy.context.scene.timeline_markers.items()
-    current = bpy.data.scenes["Scene"].frame_current
-    markers = [item[0] for item in marker_items if item[1].frame == current]
+    current_frame = bpy.context.scene.frame_current
+    markers = [item[0] for item in marker_items if item[1].frame == current_frame]
 
     if len(markers) < 1:
         return "", ""
