@@ -19,7 +19,7 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "location": "Keyframe Marker",
     "warning": "",
     "category": "Render"
