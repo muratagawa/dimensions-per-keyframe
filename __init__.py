@@ -20,9 +20,11 @@ bl_info = {
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
     "version": (0, 0, 2),
-    "location": "Keyframe Marker",
+    "location": "Timeline > Marker",
     "warning": "",
-    "category": "Render"
+    "category": "Render",
+    "wiki_url": "https://github.com/muratagawa/dimensions-per-keyframe/",
+    "tracker_url": "https://github.com/muratagawa/dimensions-per-keyframe/issues",
 }
 
 
