@@ -68,6 +68,7 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(DimensionsPerKeyframeOperator)
+    bpy.app.handlers.frame_change_pre.remove(update_resolution)
 
 
 if __name__ == "__main__":
