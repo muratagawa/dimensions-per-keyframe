@@ -12,6 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import bpy
+from bpy.types import Panel, Operator
 import re
 
 bl_info = {
@@ -28,20 +29,48 @@ bl_info = {
 }
 
 
-class DimensionsPerKeyframeOperator(bpy.types.Operator):
-    """Add-on information"""
-    bl_label = "Dimensions Per Keyframe"
-    bl_idname = "object.dpk_operator"
+class DPK_OT_save(Operator):
+    bl_idname = "object.dpk_save"
+    bl_label = "Save Render Resolusion"
+    bl_description = "Save dimensions"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        # TODO
         return {'FINISHED'}
+
+
+class DPK_OT_delete(Operator):
+    bl_idname = "object.dpk_delete"
+    bl_label = "Delete Render Resolusion"
+    bl_description = "Delete dimensions"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        # TODO
+        return {'FINISHED'}
+
+
+class DPK_PT_save_panel(Panel):
+    bl_idname = "DPK_PT_save_panel"
+    bl_label = "Save/Delete to Keyframe Marker"
+    bl_parent_id = "RENDER_PT_dimensions"
+    bl_context = "context"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator(DPK_OT_save.bl_idname)
+        layout.operator(DPK_OT_delete.bl_idname)
 
 
 def find_dimensions():
     # Get markers of current frame
     marker_items = bpy.context.scene.timeline_markers.items()
     current_frame = bpy.context.scene.frame_current
-    markers = [item[0] for item in marker_items if item[1].frame == current_frame]
+    markers = [item[0]
+               for item in marker_items if item[1].frame == current_frame]
 
     if len(markers) < 1:
         return "", ""
@@ -63,13 +92,24 @@ def update_resolution(scene):
         scene.render.resolution_y = y
 
 
+classes = (
+    DPK_OT_save,
+    DPK_PT_save_panel,
+    DPK_OT_delete,
+)
+
+
 def register():
-    bpy.utils.register_class(DimensionsPerKeyframeOperator)
+    for c in classes:
+        bpy.utils.register_class(c)
+
     bpy.app.handlers.frame_change_pre.append(update_resolution)
 
 
 def unregister():
-    bpy.utils.unregister_class(DimensionsPerKeyframeOperator)
+    for c in classes:
+        bpy.utils.unregister_class(c)
+
     bpy.app.handlers.frame_change_pre.remove(update_resolution)
 
 
