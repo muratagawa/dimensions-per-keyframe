@@ -38,9 +38,18 @@ class DPK_OT_save(Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        # TODO Overwrite if already exists
+        markers = find_dimension_markers()
+        marker_str = str(bpy.context.scene.render.resolution_x) + \
+            ":" + str(bpy.context.scene.render.resolution_y)
 
-        self.report({'INFO'}, "Dimensions saved.")
+        # TODO Overwrite if already exists
+        if len(markers) > 0:
+            self.report({'INFO'}, "Dimensions saved (overwrite).")
+            # bpy.ops.marker.rename(name="40:20")
+        else:
+            self.report({'INFO'}, "Dimensions saved.")
+            # bpy.ops.marker.add()
+
         return {'FINISHED'}
 
 
@@ -58,7 +67,7 @@ class DPK_OT_delete(Operator):
 
 class DPK_PT_save_panel(Panel):
     bl_idname = "DPK_PT_save_panel"
-    bl_label = "Save/Delete Dimensions to Keyframe Marker"
+    bl_label = "(WIP) Save/Delete Dimensions to Keyframe Marker"
     bl_parent_id = "RENDER_PT_dimensions"
     # bl_context = "context"
     bl_space_type = "PROPERTIES"
@@ -74,6 +83,7 @@ def find_dimension_markers():
     result = []
 
     # Get markers of current frame
+    # TODO Rewrite to filter() function
     all_marker_items = bpy.context.scene.timeline_markers.items()
     current_frame = bpy.context.scene.frame_current
     items = [item
