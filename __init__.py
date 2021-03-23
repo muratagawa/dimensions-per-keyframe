@@ -7,7 +7,7 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 0, 3),
+    "version": (0, 1, 0),
     "location": "Timeline > Marker",
     "warning": "",
     "category": "Render",
