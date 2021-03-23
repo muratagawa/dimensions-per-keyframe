@@ -7,7 +7,7 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 1, 0),
+    "version": (0, 1, 1),
     "location": "Timeline > Marker",
     "warning": "",
     "category": "Render",
@@ -15,13 +15,13 @@ bl_info = {
     "tracker_url": "https://github.com/muratagawa/dimensions-per-keyframe/issues",
 }
 
-MARKER_PATTERN = r"(\d+):(\d+)"
+MARKER_PATTERN = r"<(\d+):(\d+)>"
 
 
 class DPK_OT_save(Operator):
     bl_idname = "object.dpk_save"
     bl_label = "Save"
-    bl_description = "Save dimensions"
+    bl_description = "Save dimensions as a marker in the current keyframe."
     bl_options = {'REGISTER', 'UNDO'}
 
     def __save_marker(self, marker_str):
@@ -30,8 +30,8 @@ class DPK_OT_save(Operator):
 
     def execute(self, context):
         markers = find_dimension_markers_in_current_frame()
-        marker_str = str(bpy.context.scene.render.resolution_x) + \
-            ":" + str(bpy.context.scene.render.resolution_y)
+        marker_str = "<" + str(bpy.context.scene.render.resolution_x) + \
+            ":" + str(bpy.context.scene.render.resolution_y) + ">"
 
         # Overwrite if any markers exist in current frame
         if len(markers) > 0:
@@ -49,7 +49,7 @@ class DPK_OT_save(Operator):
 class DPK_OT_delete(Operator):
     bl_idname = "object.dpk_delete"
     bl_label = "Delete"
-    bl_description = "Delete dimensions"
+    bl_description = "Remove the dimensions marker from the current keyframe."
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -62,7 +62,7 @@ class DPK_OT_delete(Operator):
 
 class DPK_PT_save_panel(Panel):
     bl_idname = "DPK_PT_save_panel"
-    bl_label = "Save/Delete Dimensions to Keyframe Marker"
+    bl_label = "Save/Delete Dimensions"
     bl_parent_id = "RENDER_PT_dimensions"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
