@@ -21,7 +21,7 @@ MARKER_PATTERN = r"<(\d+):(\d+)>"
 class DPK_OT_save(Operator):
     bl_idname = "object.dpk_save"
     bl_label = "Save"
-    bl_description = "Save dimensions"
+    bl_description = "Save dimensions as a marker in the current keyframe."
     bl_options = {'REGISTER', 'UNDO'}
 
     def __save_marker(self, marker_str):
@@ -49,7 +49,7 @@ class DPK_OT_save(Operator):
 class DPK_OT_delete(Operator):
     bl_idname = "object.dpk_delete"
     bl_label = "Delete"
-    bl_description = "Delete dimensions"
+    bl_description = "Remove the dimensions marker from the current keyframe."
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -62,7 +62,7 @@ class DPK_OT_delete(Operator):
 
 class DPK_PT_save_panel(Panel):
     bl_idname = "DPK_PT_save_panel"
-    bl_label = "Save/Delete Dimensions to Keyframe Marker"
+    bl_label = "Save/Delete Dimensions"
     bl_parent_id = "RENDER_PT_dimensions"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
