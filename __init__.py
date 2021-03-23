@@ -1,16 +1,3 @@
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 import bpy
 from bpy.types import Panel, Operator
 import re
@@ -20,7 +7,7 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 0, 2),
+    "version": (0, 0, 3),
     "location": "Timeline > Marker",
     "warning": "",
     "category": "Render",
@@ -37,18 +24,24 @@ class DPK_OT_save(Operator):
     bl_description = "Save dimensions"
     bl_options = {'REGISTER', 'UNDO'}
 
+    def __save_marker(self, marker_str):
+        bpy.context.scene.timeline_markers.new(
+            name=marker_str, frame=bpy.context.scene.frame_current)
+
     def execute(self, context):
-        markers = find_dimension_markers()
+        markers = find_dimension_markers_in_current_frame()
         marker_str = str(bpy.context.scene.render.resolution_x) + \
             ":" + str(bpy.context.scene.render.resolution_y)
 
-        # TODO Overwrite if already exists
+        # Overwrite if any markers exist in current frame
         if len(markers) > 0:
-            self.report({'INFO'}, "Dimensions saved (overwrite).")
-            # bpy.ops.marker.rename(name="40:20")
+            for m in markers:
+                bpy.context.scene.timeline_markers.remove(m[1])
+            self.__save_marker(marker_str)
+            self.report({'INFO'}, "Dimensions overwrited.")
         else:
+            self.__save_marker(marker_str)
             self.report({'INFO'}, "Dimensions saved.")
-            # bpy.ops.marker.add()
 
         return {'FINISHED'}
 
@@ -60,16 +53,17 @@ class DPK_OT_delete(Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        # TODO
+        markers = find_dimension_markers_in_current_frame()
+        for m in markers:
+            bpy.context.scene.timeline_markers.remove(m[1])
         self.report({'INFO'}, "Dimensions deleted.")
         return {'FINISHED'}
 
 
 class DPK_PT_save_panel(Panel):
     bl_idname = "DPK_PT_save_panel"
-    bl_label = "(WIP) Save/Delete Dimensions to Keyframe Marker"
+    bl_label = "Save/Delete Dimensions to Keyframe Marker"
     bl_parent_id = "RENDER_PT_dimensions"
-    # bl_context = "context"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
@@ -79,7 +73,7 @@ class DPK_PT_save_panel(Panel):
         layout.operator(DPK_OT_delete.bl_idname)
 
 
-def find_dimension_markers():
+def find_dimension_markers_in_current_frame():
     result = []
 
     # Get markers of current frame
@@ -92,7 +86,6 @@ def find_dimension_markers():
     if len(items) < 1:
         return result
 
-    # Parse marker strings to X,Y dimensions
     for item in items:
         matched = re.match(MARKER_PATTERN, item[0])
         if matched:
@@ -101,8 +94,8 @@ def find_dimension_markers():
     return result
 
 
-def get_dimensions_from_marker():
-    markers = find_dimension_markers()
+def parse_dimensions_from_marker():
+    markers = find_dimension_markers_in_current_frame()
 
     if len(markers) < 1:
         return "", ""
@@ -113,7 +106,7 @@ def get_dimensions_from_marker():
 
 
 def update_dimensions(scene):
-    x, y = get_dimensions_from_marker()
+    x, y = parse_dimensions_from_marker()
     if x != "":
         scene.render.resolution_x = x
         scene.render.resolution_y = y
@@ -129,14 +122,12 @@ classes = (
 def register():
     for c in classes:
         bpy.utils.register_class(c)
-
     bpy.app.handlers.frame_change_pre.append(update_dimensions)
 
 
 def unregister():
     for c in classes:
         bpy.utils.unregister_class(c)
-
     bpy.app.handlers.frame_change_pre.remove(update_dimensions)
 
 
