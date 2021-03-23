@@ -7,7 +7,7 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 1, 0),
+    "version": (0, 1, 1),
     "location": "Timeline > Marker",
     "warning": "",
     "category": "Render",
@@ -15,7 +15,7 @@ bl_info = {
     "tracker_url": "https://github.com/muratagawa/dimensions-per-keyframe/issues",
 }
 
-MARKER_PATTERN = r"(\d+):(\d+)"
+MARKER_PATTERN = r"<(\d+):(\d+)>"
 
 
 class DPK_OT_save(Operator):
@@ -30,8 +30,8 @@ class DPK_OT_save(Operator):
 
     def execute(self, context):
         markers = find_dimension_markers_in_current_frame()
-        marker_str = str(bpy.context.scene.render.resolution_x) + \
-            ":" + str(bpy.context.scene.render.resolution_y)
+        marker_str = "<" + str(bpy.context.scene.render.resolution_x) + \
+            ":" + str(bpy.context.scene.render.resolution_y) + ">"
 
         # Overwrite if any markers exist in current frame
         if len(markers) > 0:
