@@ -1,5 +1,6 @@
 import bpy
 from bpy.types import Panel, Operator
+from bpy.app.handlers import persistent
 import re
 
 bl_info = {
@@ -7,8 +8,8 @@ bl_info = {
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
     "blender": (2, 83, 0),
-    "version": (0, 1, 1),
-    "location": "Timeline > Marker",
+    "version": (0, 1, 2),
+    "location": "Output Properties > Dimensions",
     "warning": "",
     "category": "Render",
     "wiki_url": "https://github.com/muratagawa/dimensions-per-keyframe/",
@@ -105,6 +106,7 @@ def parse_dimensions_from_marker():
     return int(m.group(1)), int(m.group(2))
 
 
+@persistent
 def update_dimensions(scene):
     x, y = parse_dimensions_from_marker()
     if x != "":
