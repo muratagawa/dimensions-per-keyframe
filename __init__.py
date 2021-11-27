@@ -7,12 +7,12 @@ bl_info = {
     "name": "Dimensions Per Keyframe",
     "author": "MURATAGAWA Kei",
     "description": "Store render dimensions per keyframe",
-    "blender": (2, 83, 0),
-    "version": (0, 1, 2),
+    "blender": (3, 0, 0),
+    "version": (1, 0, 0),
     "location": "Output Properties > Dimensions",
     "warning": "",
     "category": "Render",
-    "wiki_url": "https://github.com/muratagawa/dimensions-per-keyframe/",
+    "doc_url": "https://github.com/muratagawa/dimensions-per-keyframe/",
     "tracker_url": "https://github.com/muratagawa/dimensions-per-keyframe/issues",
 }
 
@@ -64,7 +64,7 @@ class DPK_OT_delete(Operator):
 class DPK_PT_save_panel(Panel):
     bl_idname = "DPK_PT_save_panel"
     bl_label = "Save/Delete Dimensions"
-    bl_parent_id = "RENDER_PT_dimensions"
+    bl_parent_id = "RENDER_PT_format"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
