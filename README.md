@@ -7,6 +7,12 @@ If you're a comic artist or such, you may want to render each keyframe in a diff
 With this add-on, you can save the X and Y values of the rendering resolution as markers in the timeline.
 
 
+Requirements
+----
+
+* Blender >= 3.0
+
+
 Installation
 ----
 
